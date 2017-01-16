@@ -1,0 +1,101 @@
+From 9f975ecc7857d3a5331128ed63f4e3f9d5774a4d Mon Sep 17 00:00:00 2001
+From: Daiderd Jordan <daiderd@gmail.com>
+Date: Sun, 15 Jan 2017 19:38:13 +0100
+Subject: [PATCH] add hydra-create-jobset script
+
+---
+ src/script/Makefile.am         |  1 +
+ src/script/hydra-create-jobset | 72 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 73 insertions(+)
+ create mode 100755 src/script/hydra-create-jobset
+
+diff --git a/src/script/Makefile.am b/src/script/Makefile.am
+index 5852bc8..f985a31 100644
+--- a/src/script/Makefile.am
++++ b/src/script/Makefile.am
+@@ -8,6 +8,7 @@ distributable_scripts =				\
+   hydra-server					\
+   hydra-update-gc-roots				\
+   hydra-s3-backup-collect-garbage		\
++  hydra-create-jobset				\
+   hydra-create-user				\
+   hydra-notify					\
+   hydra-send-stats				\
+diff --git a/src/script/hydra-create-jobset b/src/script/hydra-create-jobset
+new file mode 100755
+index 0000000..421cf16
+--- /dev/null
++++ b/src/script/hydra-create-jobset
+@@ -0,0 +1,72 @@
++#! /usr/bin/env perl
++
++use strict;
++use Hydra::Plugin;
++use Hydra::Schema;
++use Hydra::Helper::Nix;
++use Hydra::Helper::AddBuilds;
++use Hydra::Model::DB;
++use Getopt::Long qw(:config gnu_getopt);
++
++sub showHelp {
++    print <<EOF;
++Usage: $0 PROJECT [NAME]
++  [--trigger] [--force]
++  [--description DESCRIPTION]
++  [--url URL]
++  [--ref REF]
++  [--pull-request PULLREQUEST]
++EOF
++    exit 0;
++}
++
++my ($triggerEval, $forceEval, $description, $nixpkgsUrl, $nixpkgsRef, $pullRequest);
++
++GetOptions("trigger" => \$triggerEval,
++           "force" => \$forceEval,
++           "description=s" => \$description,
++           "url=s" => \$nixpkgsUrl,
++           "ref=s" => \$nixpkgsRef,
++           "pull-request=s" => \$pullRequest,
++           "help" => sub { showHelp() }
++    ) or exit 1;
++
++die "$0: project name required\n" if @ARGV == 0;
++my $projectName = $ARGV[0];
++my $jobsetName = $ARGV[1] if @ARGV == 2;
++
++$jobsetName = "pr-$pullRequest" if $pullRequest;
++$nixpkgsRef = "refs/pull/$pullRequest/merge" if $pullRequest;
++
++$description = "" unless $description;
++$nixpkgsUrl = "https://github.com/NixOS/nixpkgs.git" unless $nixpkgsUrl;
++$nixpkgsRef = "master" unless $nixpkgsRef;
++
++# TODO
++my $dryRun = defined $ENV{'HYDRA_DRY_RUN'};
++
++my $db = Hydra::Model::DB->new();
++
++txn_do($db, sub {
++    my $project = $db->resultset('Projects')->find({ name => $projectName });
++    my $jobset = $project->jobsets->update_or_create(
++      { name => $jobsetName, description => $description,
++        nixexprinput => "nixpkgs",
++        nixexprpath => "pkgs/top-level/release.nix",
++        enabled => 2, checkinterval => 0, emailoverride => ""
++      });
++
++    if ($jobset->jobsetinputs->count == 0) {
++      my $jobsetinput;
++      my $jobsetinputals;
++      $jobsetinput = $jobset->jobsetinputs->create({name => "nixpkgs", type => "git"});
++      $jobsetinputals = $jobsetinput->jobsetinputalts->create({altnr => 0, value => "$nixpkgsUrl $nixpkgsRef"});
++    }
++
++    if ($triggerEval) {
++      $jobset->update({ triggertime => time });
++      $jobset->update({ forceeval => 1 }) if $forceEval;
++    }
++  });
++
++print STDERR "created jobset $jobsetName in $projectName\n";

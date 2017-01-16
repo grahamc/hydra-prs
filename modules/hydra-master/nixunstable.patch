@@ -1,0 +1,20 @@
+diff --git a/pkgs/tools/package-management/nix/default.nix b/pkgs/tools/package-management/nix/default.nix
+index 30c5fc6..74f9093 100644
+--- a/pkgs/tools/package-management/nix/default.nix
++++ b/pkgs/tools/package-management/nix/default.nix
+@@ -112,12 +112,12 @@ in rec {
+
+   nixUnstable = lib.lowPrio (common rec {
+     name = "nix-1.12${suffix}";
+-    suffix = "pre4911_b30d1e7";
++    suffix = "pre4937_3a4bd32";
+     src = fetchFromGitHub {
+       owner = "NixOS";
+       repo = "nix";
+-      rev = "b30d1e7ada0a8fbaacc25e24e5e788d18bfe8d3c";
+-      sha256 = "04j6aw2bi3k7m5jyqwn1vrf78br5kdfpjsj15b5r5lvxdqhlknvm";
++      rev = "d0a2db17d91931cfd8d60e93d30cee20d39762c8";
++      sha256 = "0kilga3rxvmqx1mmmlkhhrfslx6q6p02qmjs5k33flymwk6nh3ax";
+     };
+     fromGit = true;
+   });
