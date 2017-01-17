@@ -82,7 +82,7 @@ index 0000000..421cf16
 +      { name => $jobsetName, description => $description,
 +        nixexprinput => "nixpkgs",
 +        nixexprpath => "pkgs/top-level/release.nix",
-+        enabled => 2, checkinterval => 0, emailoverride => ""
++        enabled => 2, checkinterval => 0, emailoverride => "",
 +        enableemail => 0
 +      });
 +
