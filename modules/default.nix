@@ -5,5 +5,6 @@
     ./webhook
     ./hydra-master
     ./hydra-slave
+    ./stats-server
   ];
 }

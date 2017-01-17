@@ -74,6 +74,14 @@ in {
     ];
 
     services = {
+
+      stats-server = {
+        enable = true;
+        email = "graham@grahamc.com";
+        hostname = "stats.nix.gsc.io";
+      };
+
+
       webhook = {
         enable = true;
         email = "graham@grahamc.com";
