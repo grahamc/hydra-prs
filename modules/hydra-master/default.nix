@@ -167,6 +167,10 @@ in {
       '';
     };
 
+    services.postgresql.extraConfig = ''
+      max_connections 1024
+    '';
+
     systemd.services.hydra-evaluator.path = [ services.hydra.package ]; # patch required for 16.09 but not 17.03:
   };
 }
