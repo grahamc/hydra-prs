@@ -1,6 +1,29 @@
 let
   pkgs = import <nixpkgs> {};
 
+
+  unstable = import (pkgs.stdenv.mkDerivation {
+    name = "nixpkgs";
+    src = pkgs.fetchFromGitHub {
+      owner = "NixOS";
+      repo = "nixpkgs";
+      rev = "e9109b1b979d8ce9385431b38d0f2eda693cbaf3";
+      sha256 = "06yjrzmlmgnxfr1xihazbk5n4jrkh1inwgwxyzgr9ggsx8fdd5qj";
+    };
+    phases = [ "unpackPhase" "patchPhase" "installPhase" ];
+    patches = [
+      (pkgs.fetchpatch {
+        name = "add-packet.patch";
+        url = https://github.com/NixOS/nixpkgs/commit/9d92df154905ff60aeef15ae5d8670a2a800f765.patch;
+        sha256 = "0vz029bpghk32abcwl7gi4ydrlvlf0ari0kzla74xaqm4g4ihdw2";
+      })
+    ];
+    installPhase = ''
+      cp -r . $out
+    '';
+  }) {};
+
+
   inherit (pkgs) stdenv;
 
 in stdenv.mkDerivation rec {
@@ -10,6 +33,7 @@ in stdenv.mkDerivation rec {
   src = "./";
 
   buildInputs = [
+    unstable.packet
     pkgs.nixops
   ];
 
