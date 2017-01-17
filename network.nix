@@ -2,7 +2,24 @@ let
   secrets = import ./secrets;
   packet = import ./packet.nix;
 
-  builder = ip: (packet.type1 // {
+  builderType2 = ip: (packet.type2 // {
+    deployment.targetHost = ip;
+    services.hydra-slave = {
+      enable = true;
+      public_key = "${builtins.readFile secrets.ssh_public_key}";
+    };
+  });
+
+
+  builderType1 = ip: (packet.type1 // {
+    deployment.targetHost = ip;
+    services.hydra-slave = {
+      enable = true;
+      public_key = "${builtins.readFile secrets.ssh_public_key}";
+    };
+  });
+
+  builderType0 = ip: (packet.type0 // {
     deployment.targetHost = ip;
     services.hydra-slave = {
       enable = true;
@@ -11,17 +28,32 @@ let
   });
 
 in {
-  builder-0 = builder "147.75.196.37";
-  builder-1 = builder "147.75.105.245";
-  builder-2 = builder "147.75.105.247";
-  builder-3 = builder "147.75.194.25";
-  builder-4 = builder "147.75.194.71";
-  builder-5 = builder "147.75.194.109";
-  builder-6 = builder "147.75.194.117";
-  builder-7 = builder "147.75.98.141";
-  builder-8 = builder "147.75.194.133";
-#  builder-9 = builder "147.75.194.173";
-  builder-10 = builder "147.75.194.185";
+
+  # Type 1s
+  builder-0 = builderType1 "147.75.196.37";
+  builder-1 = builderType1 "147.75.105.245";
+  builder-2 = builderType1 "147.75.105.247";
+  builder-3 = builderType1 "147.75.194.25";
+  builder-4 = builderType1 "147.75.194.71";
+  builder-5 = builderType1 "147.75.194.109";
+  builder-6 = builderType1 "147.75.194.117";
+  builder-7 = builderType1 "147.75.98.141";
+  builder-8 = builderType1 "147.75.194.133";
+  builder-9 = builderType1 "147.75.104.131";
+  builder-10 = builderType1 "147.75.194.185";
+  builder-11 = builderType1 "147.75.104.237";
+  builder-12 = builderType1 "147.75.196.123";
+  builder-13 = builderType1 "147.75.196.181";
+  builder-14 = builderType1 "147.75.196.195";
+  builder-15 = builderType1 "147.75.194.173";
+
+  # Type 0s
+  builder-16 = builderType0 "147.75.194.197";
+  builder-17 = builderType0 "147.75.196.55";
+
+  # Type 2s
+  builder-18 = builderType2 "147.75.99.71";
+
 
 
   hydra = { config, pkgs, nodes, ... }: (packet.type1 // {
