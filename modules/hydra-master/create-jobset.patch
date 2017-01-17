@@ -26,7 +26,7 @@ new file mode 100755
 index 0000000..421cf16
 --- /dev/null
 +++ b/src/script/hydra-create-jobset
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,84 @@
 +#! /usr/bin/env perl
 +
 +use strict;
@@ -83,13 +83,25 @@ index 0000000..421cf16
 +        nixexprinput => "nixpkgs",
 +        nixexprpath => "pkgs/top-level/release.nix",
 +        enabled => 2, checkinterval => 0, emailoverride => ""
++        enableemail => 0
 +      });
 +
 +    if ($jobset->jobsetinputs->count == 0) {
 +      my $jobsetinput;
 +      my $jobsetinputals;
++      my $jobsetinput_supported;
++      my $jobsetinputals_supported;
 +      $jobsetinput = $jobset->jobsetinputs->create({name => "nixpkgs", type => "git"});
 +      $jobsetinputals = $jobsetinput->jobsetinputalts->create({altnr => 0, value => "$nixpkgsUrl $nixpkgsRef"});
++      $jobsetinput_supported = $jobset->jobsetinputs->create({name => "supportedSystems", type => "nix"});
++      $jobsetinputals_supported = $jobsetinput_supported->jobsetinputalts->create({altnr => 0, value => "[\"i686-linux\" \"x86_64-linux\"]"});
++    }
++
++    if ($jobset->jobsetinputs->count == 1) {
++      my $jobsetinput_supported;
++      my $jobsetinputals_supported;
++      $jobsetinput_supported = $jobset->jobsetinputs->create({name => "supportedSystems", type => "nix"});
++      $jobsetinputals_supported = $jobsetinput_supported->jobsetinputalts->create({altnr => 0, value => "[\"i686-linux\" \"x86_64-linux\"]"});
 +    }
 +
 +    if ($triggerEval) {
