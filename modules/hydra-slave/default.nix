@@ -29,7 +29,12 @@ in {
       ${/nix/store/g1xy1paj595yzzl2wmw4si63ravjykck-isl-0.14.1.tar.xz}
       ${/nix/store/4lhmcrqgnnim1vj069nsbhkrxnzzd1cp-svn-r10}
       ${/nix/store/hf8xqh4zdcz4p0nysdmykfy0graas6m8-gmsh-2.12.0-source.tgz}
-      ${/nix/store/bm052v0zqk8w4gvfwqacszb6b9kijcs4-glibc-2.24-bin}
+      ${pkgs.glibc}
+      ${pkgs.glibc.bin}
+      ${pkgs.glibc.debug}
+      ${pkgs.glibc.out}
+      ${pkgs.glibc.dev}
+      ${pkgs.glibc.static}
     '';
 
 

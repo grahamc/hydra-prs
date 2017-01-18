@@ -54,6 +54,21 @@ in {
   # Type 2s
   builder-18 = builderType2 "147.75.99.71";
 
+  # Type 0s
+  builder-19 = builderType0 "147.75.98.167";
+  builder-20 = builderType0 "147.75.196.63";
+  builder-21 = builderType0 "147.75.196.93";
+  builder-22 = builderType0 "147.75.196.115";
+  builder-23 = builderType0 "147.75.196.183";
+  builder-24 = builderType0 "147.75.196.237";
+  builder-25 = builderType0 "147.75.98.171";
+  builder-26 = builderType0 "147.75.106.53";
+  builder-27 = builderType0 "147.75.196.117";
+  builder-28 = builderType0 "147.75.196.239";
+  builder-29 = builderType0 "147.75.195.25";
+
+  builder-30 = builderType0 "147.75.195.29";
+
 
 
   hydra = { config, pkgs, nodes, ... }: (packet.type1 // {
