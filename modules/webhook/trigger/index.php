@@ -12,6 +12,17 @@ function jobset($number, $description) {
   ));
 }
 
+function branch($name, $ref) {
+  $e_name = escapeshellarg($name);
+  $e_ref = escapeshellarg($ref);
+
+  file_put_contents("/tmp/whatever",
+    shell_exec("export HYDRA_DBI='dbi:Pg:dbname=hydra;user=hydra;'; /run/current-system/sw/bin/hydra-create-jobset "
+                                    . " nixos $e_name --trigger "
+                                    . " --ref $e_ref"
+                                    . " 2>&1"
+  ));
+}
 
 $input = json_decode(file_get_contents('php://input'), true);
 
@@ -29,6 +40,13 @@ if (isset($input['number'])
   $description = $input['pull_request']['title'];
 
   jobset($number, $description);
+} elseif (isset($input['ref'])) {
+  $ref = $input['ref'];
+  switch ($ref) {
+    case 'refs/heads/master':
+      branch('master', $ref);
+      break;
+  }
 } else {
   file_put_contents("/tmp/whatever", var_export($input, true));
 }
