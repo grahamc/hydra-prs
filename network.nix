@@ -30,16 +30,16 @@ let
 in {
 
   # Type 1s
-  builder-0 = builderType1 "147.75.196.37";
-  builder-1 = builderType1 "147.75.105.245";
-  builder-2 = builderType1 "147.75.105.247";
-  builder-3 = builderType1 "147.75.194.25";
-  builder-4 = builderType1 "147.75.194.71";
-  builder-5 = builderType1 "147.75.194.109";
-  builder-6 = builderType1 "147.75.194.117";
-  builder-7 = builderType1 "147.75.98.141";
-  builder-8 = builderType1 "147.75.194.133";
-  builder-9 = builderType1 "147.75.104.131";
+  builder-00 = builderType1 "147.75.205.131";
+  builder-01 = builderType1 "147.75.100.177";
+  builder-02 = builderType1 "147.75.205.215";
+  builder-03 = builderType1 "147.75.205.151";
+  builder-04 = builderType1 "147.75.100.109";
+  builder-05 = builderType1 "147.75.204.195";
+  builder-06 = builderType1 "147.75.205.153";
+  builder-07 = builderType1 "147.75.102.39";
+  builder-08 = builderType1 "147.75.204.205";
+  builder-09 = builderType1 "147.75.102.57";
   builder-10 = builderType1 "147.75.194.185";
   builder-11 = builderType1 "147.75.104.237";
   builder-12 = builderType1 "147.75.196.123";
