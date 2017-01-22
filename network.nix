@@ -96,6 +96,64 @@ in {
         hostname = "stats.nix.gsc.io";
       };
 
+    postgresql.identMap = ''
+      hydra-users collectd hydra
+    '';
+
+      collectd = {
+        enable = true;
+        extraConfig = ''
+          LoadPlugin "write_graphite"
+          <Plugin "write_graphite">
+           <Node "example">
+              Host "localhost"
+              Port "2003"
+              EscapeCharacter "_"
+              SeparateInstances true
+              StoreRates false
+              AlwaysAppendDS false
+            </Node>
+          </Plugin>
+
+         LoadPlugin cpu
+         LoadPlugin load
+         LoadPlugin memory
+         LoadPlugin df
+         LoadPlugin ethstat
+         LoadPlugin "md"
+         LoadPlugin "disk"
+         LoadPlugin postgresql
+
+         <Plugin df>
+           Interval 3600
+         </Plugin>
+
+         <Plugin disk>
+           Disk md126
+         </Plugin>
+
+         <Plugin "ethstat">
+           Interface "bind0"
+         </Plugin>
+
+
+          <Plugin postgresql>
+            <Database hydra>
+             Host "/tmp/"
+             User "hydra"
+             Query connections
+             Query transactions
+             Query queries
+             Query query_plans
+             Query table_states
+             Query disk_io
+             Query disk_usage
+
+            </Database>
+          </Plugin>
+        '';
+      };
+
 
       webhook = {
         enable = true;
