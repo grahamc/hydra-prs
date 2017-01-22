@@ -35,6 +35,7 @@ in stdenv.mkDerivation rec {
   buildInputs = [
     unstable.packet
     pkgs.nixops
+    pkgs.jq
   ];
 
   shellHook = ''

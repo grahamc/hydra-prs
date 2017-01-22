@@ -147,7 +147,19 @@ in {
     services.hydra = {
       enable = true;
       package = (unstable.hydra.overrideDerivation (x: {
-        patches = [./create-jobset.patch];
+        patches = [
+          ./create-jobset.patch
+          (pkgs.fetchpatch {
+            name = "faster-homepage-queries.patch";
+            url = "https://github.com/grahamc/hydra/commit/4ba14370f8316f4533ca94f4994ba760dce18c68.patch";
+            sha256 = "0bmy8sf71zsj00vs92v7x2vq3p5m1b3kixvppxs7lmbmcm6vw6sn";
+          })
+          (pkgs.fetchpatch {
+            name = "faster-previous-build-step.patch";
+            url = "https://github.com/grahamc/hydra/commit/b1c114312c28eb1152425848106999c057a24b31.patch";
+            sha256 = "13jkn6cnbmv3glrzp7sg1743xglxzbycnfwa57dziixagh48qjad";
+          })
+        ];
       }));
       hydraURL = "http://127.0.0.1:3000/";
       minimumDiskFree = 5;
