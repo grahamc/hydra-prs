@@ -169,6 +169,11 @@ in {
 
     services.postgresql.extraConfig = ''
       max_connections 1024
+      shared_buffers 4GB
+      effective_cache_size 8GB
+      checkpoint_completion_target .9
+      work_mem 25MB
+      log_min_duration_statement 250
     '';
 
     systemd.services.hydra-evaluator.path = [ services.hydra.package ]; # patch required for 16.09 but not 17.03:
