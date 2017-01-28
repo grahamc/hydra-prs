@@ -138,7 +138,7 @@ in {
         sshKey = cfg.private_key;
         sshUser = "root";
         system = "x86_64-linux,i686-linux";
-        supportedFeatures = [ "kvm" "nixos-test" "big-parallel" ];
+        supportedFeatures = [ "kvm" "nixos-test" "benchmark" "big-parallel" ];
       }) cfg.slaves);
     };
 
