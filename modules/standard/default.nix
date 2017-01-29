@@ -32,6 +32,11 @@ in {
     ];
 
     nix = {
+      gc = {
+        automatic = true;
+        dates = "*:0/30";
+      };
+
       binaryCaches = lib.mkForce [
         https://nix-cache.s3.amazonaws.com/
        "https://${cfg.s3_bucket}.s3.amazonaws.com/"
