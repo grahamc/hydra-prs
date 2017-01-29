@@ -24,11 +24,6 @@ in {
     ];
 
     environment.etc."Fixups".text = ''
-      ${/nix/store/glhzrqmmgi0zmr475g05img3c9w7y65d-hg-archive}
-      ${/nix/store/a2j2id380nxnwqrhqsbpwcc3xkgydsls-hg-archive}
-      ${/nix/store/g1xy1paj595yzzl2wmw4si63ravjykck-isl-0.14.1.tar.xz}
-      ${/nix/store/4lhmcrqgnnim1vj069nsbhkrxnzzd1cp-svn-r10}
-      ${/nix/store/hf8xqh4zdcz4p0nysdmykfy0graas6m8-gmsh-2.12.0-source.tgz}
       ${pkgs.glibc}
       ${pkgs.glibc.bin}
       ${pkgs.glibc.debug}
