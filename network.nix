@@ -36,7 +36,7 @@ in {
   builder-03 = builderType1 "147.75.205.151";
   builder-04 = builderType1 "147.75.100.109";
   builder-05 = builderType1 "147.75.204.195";
-  builder-06 = builderType1 "147.75.205.153";
+  builder-06 = builderType1 "147.75.205.181";
   builder-07 = builderType1 "147.75.102.39";
   builder-08 = builderType1 "147.75.204.205";
   builder-09 = builderType1 "147.75.102.57";
