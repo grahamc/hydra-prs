@@ -81,7 +81,7 @@ index 0000000..421cf16
 +    my $jobset = $project->jobsets->update_or_create(
 +      { name => $jobsetName, description => $description,
 +        nixexprinput => "nixpkgs",
-+        nixexprpath => "pkgs/top-level/release.nix",
++        nixexprpath => "nixos/release-combined.nix",
 +        enabled => 2, checkinterval => 0, emailoverride => "",
 +        enableemail => 0
 +      });
