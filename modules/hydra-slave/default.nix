@@ -19,7 +19,7 @@ in {
   config = mkIf cfg.enable rec {
     users.users.root.openssh.authorizedKeys.keys = [
       ''
-        command="nice -n20 nix-store --serve --write" ${cfg.public_key}
+        command="nix-store --serve --write" ${cfg.public_key}
       ''
     ];
 

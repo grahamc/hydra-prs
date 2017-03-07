@@ -20,7 +20,10 @@ in {
   };
 
   config = {
-    services.openssh.enable = true;
+    services.openssh = {
+      enable = true;
+      passwordAuthentication = false;
+    };
 
     networking.firewall = {
       enable = true;
@@ -39,12 +42,12 @@ in {
 
       binaryCaches = lib.mkForce [
         https://nix-cache.s3.amazonaws.com/
-       "https://${cfg.s3_bucket}.s3.amazonaws.com/"
+       # "https://${cfg.s3_bucket}.s3.amazonaws.com/"
       ];
 
       binaryCachePublicKeys = [
         "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs="
-        (lib.readFile "${cfg.public_key_file}")
+        # (lib.readFile "${cfg.public_key_file}")
       ];
       useSandbox = true;
     };

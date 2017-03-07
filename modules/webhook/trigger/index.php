@@ -35,18 +35,12 @@ if (isset($input['number'])
 ) {
 
 
+  file_put_contents("/tmp/whatever", var_export($input, true));
 
   $number = (int)$input['number'];
   $description = $input['pull_request']['title'];
 
-  jobset($number, $description);
-} elseif (isset($input['ref'])) {
-  $ref = $input['ref'];
-  switch ($ref) {
-    case 'refs/heads/master':
-      branch('master', $ref);
-      break;
-  }
+  //jobset($number, $description);
 } else {
   file_put_contents("/tmp/whatever", var_export($input, true));
 }
