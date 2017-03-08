@@ -2,37 +2,30 @@ let
   secrets = import ./secrets;
   packet = import ./packet.nix;
 
-  builderType2 = ip: (packet.type2 // {
+
+  baseBuilder = ip: {
     deployment.targetHost = ip;
     services.hydra-slave = {
       enable = true;
       public_key = "${builtins.readFile secrets.ssh_public_key}";
     };
-  });
+  };
 
-
-  builderType1 = ip: (packet.type1 // {
-    deployment.targetHost = ip;
-    services.hydra-slave = {
-      enable = true;
-      public_key = "${builtins.readFile secrets.ssh_public_key}";
-    };
-  });
-
-  builderType0 = ip: (packet.type0 // {
-    deployment.targetHost = ip;
-    services.hydra-slave = {
-      enable = true;
-      public_key = "${builtins.readFile secrets.ssh_public_key}";
-    };
-  });
-
+  builderType2A = ip: (packet.type2A // (baseBuilder ip));
+  builderType2 = ip: (packet.type2 // (baseBuilder ip));
+  builderType1 = ip: (packet.type1 // (baseBuilder ip));
+  builderType0 = ip: (packet.type0 // (baseBuilder ip));
 in {
 
   # Type 2s
   builder-18 = builderType2 "147.75.99.71";
-
-  builder-19 = builderType2 "147.75.102.157";
+  builder-19 = (builderType2 "147.75.102.157" // { # NOT A BUILDER
+    users.users.root.openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGr5kHDy3gSsEmTK30sPjW6XMGZHHcGBjFlSFlsYeGkS m@cache.nixos.community"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK20Lv3TggAXcctelNGBxjcQeMB4AqGZ1tDCzY19xBUV fpletz@lolnovo"
+    ];
+  });
+  builder-2A-1 = builderType2A "147.75.65.54";
 
 
   hydra = { config, pkgs, nodes, ... }: (packet.type1 // {
