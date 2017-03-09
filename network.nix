@@ -19,12 +19,32 @@ in {
 
   # Type 2s
   builder-18 = builderType2 "147.75.99.71";
-  builder-19 = (builderType2 "147.75.102.157" // { # NOT A BUILDER
-    users.users.root.openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGr5kHDy3gSsEmTK30sPjW6XMGZHHcGBjFlSFlsYeGkS m@cache.nixos.community"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK20Lv3TggAXcctelNGBxjcQeMB4AqGZ1tDCzY19xBUV fpletz@lolnovo"
-    ];
-  });
+  builder-19 = { lib, ... }: lib.mkMerge [
+    (packet.type2 // { deployment.targetHost = "147.75.102.157"; })
+    { # NOT A BUILDER
+      users.users.root.openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGr5kHDy3gSsEmTK30sPjW6XMGZHHcGBjFlSFlsYeGkS m@cache.nixos.community"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK20Lv3TggAXcctelNGBxjcQeMB4AqGZ1tDCzY19xBUV fpletz@lolnovo"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFaUo9s3om/x1PCO+VrRMaPxUXqWPP3h63EBF7NGiV8O root@builder-19"
+      ];
+
+      networking.firewall.allowedTCPPorts = [ 4001 ];
+
+      networking.nat = {
+        enable = true;
+        internalIPs = [ "10.233.1.2" ];
+        externalInterface = "bond0";
+        forwardPorts = [
+          { sourcePort = 4001; destination = "10.233.1.2:4001"; }
+        ];
+      };
+
+      fileSystems."/var/lib/containers" = {
+        device = "LABEL=containers";
+        fsType = "btrfs";
+      };
+    }
+  ];
   builder-2A-1 = builderType2A "147.75.65.54";
 
 
