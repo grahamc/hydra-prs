@@ -20,9 +20,12 @@ in {
   };
 
   config = {
-    services.openssh = {
-      enable = true;
-      passwordAuthentication = false;
+    services = {
+      fail2ban.enable = true;
+      openssh = {
+        enable = true;
+        passwordAuthentication = false;
+      };
     };
 
     networking.firewall = {
@@ -36,8 +39,9 @@ in {
     ];
 
     nix = {
+      package = pkgs.nixUnstable;
       gc = {
-        automatic = false;
+        automatic = true;
         dates = "*:0/30";
       };
 
