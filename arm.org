@@ -1,0 +1,66 @@
+* Initial Setup
+** Provision an ARM (the Type-2A) server with your ssh key
+
+takes about 10 minutes to setup
+
+~ssh root@the-ip~
+
+~uname -a~ showed me:
+
+=Linux arm-gc.local.lan 4.4.0-38-generic #57-Ubuntu SMP Wed Sep 7
+10:19:14 UTC 2016 aarch64 aarch64 aarch64 GNU/Linux=
+
+** Pre-installation
+
+1. Disable swap and format as ext4
+
+Looking at =/etc/fstab= and then =ls -la /dev/disk/by-uuid= I found my
+swap was at =/dev/sda2=.
+
+~swapoff /dev/sda2; mkfs.ext4 /dev/sda2~
+
+The =mkfs.ext4= should prompt about it being a swap filesystem, say
+yes.
+
+Mount =/dev/sda2= to /mnt
+
+** Copy the system closure from the existing box (147.75.195.106) with rsync
+
+#+BEGIN_SRC text
+$ rsync -avz $(nix-store -qR --include-outputs  \
+    $(readlink /run/booted-system)) root@<newbox>:/mnt/nix/store/~
+$ rsync -avz /nix/var/ root@<newbox>:/mnt/nix/var
+#+END_SRC
+
+*** Failed Methods
+**** ~nix-copy-closure~
+
+~nix-copy-closure --to root@<newbox> /run/booted-system~
+
+Target system doesn't have ~nix-store~
+
+** Bootloader
+
+Here is the sample from Dezgeg:
+
+#+BEGIN_SRC text
+menuentry "NixOS - Configuration 4 (2017-01-18 - 17.03pre-git)" {
+search --set=drive1 --fs-uuid SDA2-UUID
+search --set=drive2 --fs-uuid SDA2-UUID
+  linux ($drive2)/nix/store/vj1wzzwxg3gwfl15kvsd62a41chnhq43-linux-4.9.4/Image.gz systemConfig=/nix/store/mv1pmjzvhfjlw1qn5062nj14h8xqci17-nixos-system-nixos-17.03pre-git init=/nix/store/mv1pmjzvhfjlw1qn5062nj14h8xqci17-nixos-system-nixos-17.03pre-git/init loglevel=4 cma=0M biosdevname=0 net.ifnames=0 console=ttyAMA0
+  initrd ($drive2)/nix/store/69rnl7i62ss6hwn3pvqcgjmr57kzacnq-initrd/initrd
+}
+#+END_SRC
+
+Change =SDA2-UUID= to the uuid of =/dev/sda2=, which can be found by
+finding what links to =/dev/sda2= via ~ls -la /dev/disk/by-uuid~ and
+place it directly before the ubuntu =menuitem=
+
+Note that it is worth the time to verify that the paths in that
+snippet exist under =/mnt=
+
+** Reboot... and hope ;)
+
+* Ok you're in NixOS now
+
+Connect over the SOS console and you'll be automatically logged in.

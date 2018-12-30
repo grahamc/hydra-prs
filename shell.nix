@@ -1,28 +1,19 @@
 let
   pkgs = import <nixpkgs> {};
 
+  use-cloned-nixops = true;
 
-  unstable = import (pkgs.stdenv.mkDerivation {
-    name = "nixpkgs";
-    src = pkgs.fetchFromGitHub {
-      owner = "NixOS";
-      repo = "nixpkgs";
-      rev = "e9109b1b979d8ce9385431b38d0f2eda693cbaf3";
-      sha256 = "06yjrzmlmgnxfr1xihazbk5n4jrkh1inwgwxyzgr9ggsx8fdd5qj";
-    };
-    phases = [ "unpackPhase" "patchPhase" "installPhase" ];
-    patches = [
-      (pkgs.fetchpatch {
-        name = "add-packet.patch";
-        url = https://github.com/NixOS/nixpkgs/commit/9d92df154905ff60aeef15ae5d8670a2a800f765.patch;
-        sha256 = "0vz029bpghk32abcwl7gi4ydrlvlf0ari0kzla74xaqm4g4ihdw2";
-      })
-    ];
-    installPhase = ''
-      cp -r . $out
-    '';
-  }) {};
-
+  nixops = if use-cloned-nixops
+    then (import ./nixops/release.nix {}).build.x86_64-linux
+    else (pkgs.nixops.overrideAttrs (x: {
+      patches = [
+        (pkgs.fetchpatch {
+          # Allow specifying custom nixpkgs for a machine
+          url = "https://github.com/NixOS/nixops/pull/665.patch";
+          sha256 = "0q7sk3fq3x7r2sh6f853hcbykm74px9i0m5bqhg2fi0s4nckj5x0";
+        })
+      ];
+    }));
 
   inherit (pkgs) stdenv;
 
@@ -33,8 +24,8 @@ in stdenv.mkDerivation rec {
   src = "./";
 
   buildInputs = [
-    unstable.packet
-    pkgs.nixops
+    pkgs.packet
+    nixops
     pkgs.jq
   ];
 
