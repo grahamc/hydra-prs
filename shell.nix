@@ -1,7 +1,7 @@
 let
   pkgs = import <nixpkgs> {};
 
-  use-cloned-nixops = false;
+  use-cloned-nixops = true;
 
   nixops = if use-cloned-nixops
     then (import ./nixops/release.nix {}).build.x86_64-linux

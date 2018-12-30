@@ -194,7 +194,8 @@
     };
 
     nix = {
-      maxJobs = 96;
+        maxJobs = 96;
+        buildCores = 0;
     };
     nixpkgs = {
       system = "aarch64-linux";
